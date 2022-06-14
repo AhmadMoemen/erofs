@@ -27,7 +27,7 @@ mount() {
     sudo rm -rf $tmpdir $MOUNTDIR
     mkdir $MOUNTDIR
     echo "[INFO] Mounting $PARTITION..."
-    sudo mount -t auto -o loop $IMAGE $MOUNTDIR
+    sudo mount -t erofs -o loop $IMAGE $MOUNTDIR
 }
 
 contextfix() {
@@ -89,7 +89,7 @@ contextfix() {
     /my_version/vendor/firmware(/.*)?      u:object_r:vendor_file:s0" >> "$fileconts"
     if [[ $PARTITION != "system" ]]; then
         mkdir $LOCALDIR/system
-        sudo mount -t auto $RUNDIR/system.img $LOCALDIR/system
+        sudo mount -t erofs $RUNDIR/system.img $LOCALDIR/system
         sudo cat $LOCALDIR/system/system/etc/selinux/plat_file_contexts >> $fileconts
         sudo umount -f -l $LOCALDIR/system
         rm -rf $LOCALDIR/system
