@@ -2,6 +2,7 @@
 
 ### Prerequisites ###
 - Linux running kernel 5.4 or up (check with `uname -r`)
+- I suggest not to use WSL as it has disabled SELinux
 
 ### Image rebuilding ###
 - Used to rebuild read-only erofs images into EXT4 mountable images.
@@ -17,9 +18,11 @@ sudo ./erofs.sh system_ext.img system_ext
 - IF you're running into issues like "not enough space to setup filesystem", specify filesystem size by adding the size (I recommend 64MB) after $2.
 
 ### Product image rebuilding ###
-- OPlus (previously oppo) has been being a jerk and adding a butt ton of useless so-called "optimizations" (porting killers). This is one of them.
-- In Android 12 (OxygenOS 12 at least), OPlus has added `OPLUS_FEATURE_OVERLAY_MOUNT` to "mount product partition from existing my_* partitions" (to save image space? idk). With this going on, the product image shipped with OTAs is a dummy image that could not be mounted.
+- OPlus (previously oppo) has been a jerk lately and keeps adding a butt ton of useless so-called "optimizations" (porting killers). This is one of them.
+- In oplus Android 12 builds, OPlus has added `OPLUS_FEATURE_OVERLAY_MOUNT` to "mount product partition from existing my_* partitions" (to save image space? idk). With this going on, the product image shipped with OTAs is a dummy image that could not be mounted.
 - Non-OPlus devices does NOT have `OPLUS_FEATURE_OVERLAY_MOUNT` implementation (and it is highly unrecommended to use it, as someone has bricked their devices before after implementing it). However, product image should NOT be empty (there is a system symlink pointing to `/product`). Therefore, this script is written to merge the my_* partitions into a single product image to replicate the `/product` behavior on OPlus devices.
+- Note from the forker: The product partition might NOT be a dummy image, but might be a generic one, it has the device props!
+Not sure about the implementation at all but it seems like product image can be fixed to be mounted after all...
 
 Usage:
 `
@@ -36,6 +39,7 @@ sudo ./oplus-merge.sh
 
 ### Notes ###
 - All images (especially system) must be the dir that the script is ran.
+- Make sure you have enough space. (probably like 25gb recommended)
 
 ### To-Do ###
 - Remove dependency of system file_contexts to build all images (we currently cat system filecontexts to the working file contexts to make the image resign properly)
@@ -50,6 +54,8 @@ sudo ./oplus-merge.sh
 [Velosh](https://github.com/velosh)
 
 [Piraterex](https://github.com/piraterex)
+
+[Rain2Wood](https://github.com/rain2wood)
 
 [Xiaoxindada](https://github.com/xiaoxindada)
 
