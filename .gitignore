@@ -1,3 +1,9 @@
 tools/*.pyc
 tmp/
 product/
+my_*/
+system/
+system_ext/
+vendor/
+ext4/
+*.txt
