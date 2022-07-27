@@ -7,3 +7,5 @@ system_ext/
 vendor/
 ext4/
 *.txt
+ext4/*.img
+ext4/*.txt
