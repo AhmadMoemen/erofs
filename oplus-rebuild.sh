@@ -12,7 +12,7 @@ do
 	if [ -f "$part.img" ]; then
 	echo "[INFO] Converting $part.img to erofs"
 	./erofs.sh $part.img $part
-	mv *-ext4.img ext4/
+	mv $part-ext4.img ext4/
 	fi
 done
 [ $(du -sm $MERGEDIR | awk '{printf $1}') -gt 20 ] && cp product.img ext4/
