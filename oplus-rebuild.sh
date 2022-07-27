@@ -1,4 +1,7 @@
 #!/bin/bash
+RUNDIR=$(realpath .)
+cd $RUNDIR
+
 echo "[INFO] Cleaning up existing build residue"
 rm -rf ext4/*.img
 PARTITIONS="my_product my_engineering my_company my_carrier my_region my_heytap my_stock my_preload my_bigball my_manifest system vendor product system_ext"
