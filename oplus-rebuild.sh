@@ -4,7 +4,7 @@ cd $RUNDIR
 
 echo "[INFO] Cleaning up existing build residue"
 rm -rf ext4/*.img
-PARTITIONS="my_product my_engineering my_company my_carrier my_region my_heytap my_stock my_preload my_bigball my_manifest system vendor product system_ext"
+PARTITIONS="my_product my_engineering my_company my_carrier my_region my_heytap my_stock my_preload my_bigball my_manifest system vendor system_ext"
 echo "Batch converting erofs images..."
 echo
 for part in $PARTITIONS
@@ -15,7 +15,7 @@ do
 	mv *-ext4.img ext4/
 	fi
 done
-[ $(du -sm $MERGEDIR | awk '{printf $1}') -le 20 ] cp product.img ext4/
+[ $(du -sm $MERGEDIR | awk '{printf $1}') -gt 20 ] && cp product.img ext4/
 cd ext4
 for part in $PARTITIONS
 do
