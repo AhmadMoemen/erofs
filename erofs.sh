@@ -36,8 +36,8 @@ testmount() {
     rm -rf system
 }
 
-mount() {
-    sudo rm -rf $tmpdir $MOUNTDIR
+mountimg() {
+    rm -rf $tmpdir $MOUNTDIR
     mkdir $MOUNTDIR
     echo "[INFO] Mounting $PARTITION..."
     sudo mount -t auto -o ro,loop $IMAGE $MOUNTDIR
@@ -131,5 +131,5 @@ rebuild() {
 
 check
 testmount
-mount
+mountimg
 rebuild
