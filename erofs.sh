@@ -23,6 +23,13 @@ if [[ $2 == "" ]]; then
     usage
 fi
 
+testmount() {
+    mkdir system
+    mount -o loop -t erofs system.img system
+    umount system
+    rm -rf system
+}
+
 mount() {
     sudo rm -rf $tmpdir $MOUNTDIR
     mkdir $MOUNTDIR
@@ -116,5 +123,6 @@ rebuild() {
     echo "[INFO] Done"
 }
 
+testmount
 mount
 rebuild
