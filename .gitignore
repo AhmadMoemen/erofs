@@ -6,6 +6,6 @@ system/
 system_ext/
 vendor/
 ext4/
-*.txt
+*.img
 ext4/*.img
 logs/*.txt
