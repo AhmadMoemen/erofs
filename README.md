@@ -4,6 +4,12 @@
 - Linux running kernel 5.4 or up (check with `uname -r`)
 - I suggest not to use WSL as it has disabled SELinux
 
+### OPlus rebuild script ###
+- Run all of these tasks at once, it batch converts the oplus erofs images to ext4, then moves the ext4 images to the output (ext4) folder and runs both merger scripts.
+Usage:
+`
+sudo ./oplus-rebuild.sh
+`
 ### Image rebuilding ###
 - Used to rebuild read-only erofs images into EXT4 mountable images.
 Usage:
