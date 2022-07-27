@@ -23,6 +23,12 @@ if [[ $2 == "" ]]; then
     usage
 fi
 
+check() {
+if [ ! -d tools ]; then
+echo "tools folder is not present, aborting..." && exit
+fi
+}
+
 testmount() {
     mkdir system
     mount -o loop -t erofs system.img system
@@ -123,6 +129,7 @@ rebuild() {
     echo "[INFO] Done"
 }
 
+check
 testmount
 mount
 rebuild
