@@ -56,10 +56,7 @@ odmmerge() {
 	cp -fpr ../odm/build.prop ./odm/ >/dev/null 2>&1
         cp -fpr ../odm/etc/ ./odm/ >/dev/null 2>&1
         rm -rf ./odm/etc/*
-	OPID=$(ls -d ../odm/etc/1* | tail -c 6)
-	if [[ $OPID == "" ]]; then
-	OPID=$(ls -d ../odm/etc/2* | tail -c 6)
-	fi
+	OPID=$(ls -d ../odm/etc/[0-9]* | tail -c 6)
 	cp -fpr ../odm/etc/$OPID ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/normalize ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
