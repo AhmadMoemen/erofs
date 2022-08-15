@@ -45,22 +45,30 @@ merge() {
         rm -rf $partition/ >/dev/null 2>&1
 }
 
-odmerge() {
+odmmerge() {
         cd $RUNDIR
         echo "[INFO] Merging odm into system"
         mkdir odm >/dev/null 2>&1
         mount -o loop -t auto odm.img odm >/dev/null 2>&1
+	mount -o loop -t auto system.img system >/dev/null 2>&1
         cd system >/dev/null 2>&1
-        rm -rf odm/
-        cp -fpr ../odm/ . >/dev/null 2>&1
-        rm -rf odm/etc/ueventd*
-        rm -rf odm/etc/*.xml
-	rm -rf odm/etc/*.conf
-	rm -rf odm/etc/*.pnscr
-        rm -rf odm/vendor/
-        rm -rf odm/firmware/
+        rm -rf odm/*
+	cp -fpr ../odm/build.prop ./odm/ >/dev/null 2>&1
+        cp -fpr ../odm/etc/ ./odm/ >/dev/null 2>&1
+        rm -rf ./odm/etc/*
+	OPID=$(ls -d ../odm/etc/1* | tail -c 6)
+	if [[ $OPID == "" ]]; then
+	OPID=$(ls -d ../odm/etc/2* | tail -c 6)
+	fi
+	cp -fpr ../odm/etc/$OPID ./odm/etc >/dev/null 2>&1
+	cp -fpr ../odm/etc/normalize ./odm/etc >/dev/null 2>&1
+	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
+	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/build.prop
+	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/etc/build.prop
+	sed -i 's|/mnt/vendor||g' ./odm/build.prop
         cd ..
         umount -f -l odm  >/dev/null 2>&1
+	umount -f -l system  >/dev/null 2>&1
         rm -rf odm >/dev/null 2>&1
 }
 
@@ -95,7 +103,7 @@ prep
 for partition in $PARTITIONS; do
     merge >> ../logs/smerge-log.txt
 done
-#odmerge
+odmmerge
 getsize
 prepimg >> ../logs/simg-log.txt
 echo "[INFO] Cleaning up"
