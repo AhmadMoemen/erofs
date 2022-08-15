@@ -4,7 +4,7 @@ cd $RUNDIR
 
 echo "[INFO] Cleaning up existing build residue"
 rm -rf ext4/*.img
-PARTITIONS="my_product my_engineering my_company my_carrier my_region my_heytap my_stock my_preload my_bigball my_manifest system vendor system_ext"
+PARTITIONS="my_product my_engineering my_company my_carrier my_region my_heytap my_stock my_preload my_bigball my_manifest system vendor system_ext odm"
 echo "Batch converting erofs images..."
 echo
 for part in $PARTITIONS
