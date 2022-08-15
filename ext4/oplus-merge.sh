@@ -60,6 +60,7 @@ odmmerge() {
 	cp -fpr ../odm/etc/$OPID ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/normalize ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
+	cp -fpr ../odm/overlay ./odm >/dev/null 2>&1
 	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/build.prop
 	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/etc/build.prop
 	sed -i 's|/mnt/vendor||g' ./odm/build.prop
