@@ -29,7 +29,7 @@ echo "[INFO] Merging partitions into system.img"
 else
 echo "[WARNING] System image is missing, skipping..."
 fi
-OUT="system vendor system_ext odm product"
+OUT="system vendor system_ext product"
 for out in $OUT
 do
 	if [ -f $out.img ]; then

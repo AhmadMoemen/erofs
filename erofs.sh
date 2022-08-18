@@ -4,8 +4,10 @@ IMAGE=$(realpath $1)
 PARTITION=$2
 SIZE=$3
 
-rm -rf log.txt >> /dev/null
-touch log.txt
+rm -rf ext4/erofs-log.txt >> /dev/null
+touch logs/erofs-log.txt
+rm -rf ext4/mkimg-log.txt >> /dev/null
+touch logs/mkimg-log.txt
 
 NEWIMAGE="ext4/$PARTITION.img"
 LOCALDIR=`cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd`
@@ -121,12 +123,15 @@ rebuild() {
     else SIZE=$(du -sb $MOUNTDIR | awk '{$1=int($1*2);printf("%.f", $1)}')
     fi
     if [[ $PARTITION == "system" ]]; then
-        sudo $toolsdir/mkuserimg_mke2fs.py "$MOUNTDIR/" "$NEWIMAGE" ext4 "/" $SIZE $fileconts -j "0" -T "1230768000" -L "/" -I "256" -M "/" -m "0" >> log.txt
+        sudo $toolsdir/mkuserimg_mke2fs.py "$MOUNTDIR/" "$NEWIMAGE" ext4 "/" $SIZE $fileconts -j "0" -T "1230768000" -L "/" -I "256" -M "/" -m "0" >> logs/mkimg-log.txt
     else
-        sudo $toolsdir/mkuserimg_mke2fs.py "$MOUNTDIR/" "$NEWIMAGE" ext4 "/$PARTITION" $SIZE $fileconts -j "0" -T "1230768000" -L "$PARTITION" -I "256" -M "/$PARTITION" -m "0" >> log.txt
+        sudo $toolsdir/mkuserimg_mke2fs.py "$MOUNTDIR/" "$NEWIMAGE" ext4 "/$PARTITION" $SIZE $fileconts -j "0" -T "1230768000" -L "$PARTITION" -I "256" -M "/$PARTITION" -m "0" >> logs/mkimg-log.txt
     fi
+    echo "[INFO] Setting $PARTITION image size"
     getsize
-    resizeimg
+    if [[ ! -z $NEWSIZE ]]; then
+    resizeimg >> logs/erofs-log.txt
+    fi
     sudo umount -f -l $MOUNTDIR
     rm -rf $MOUNTDIR 
     sudo rm -rf $tmpdir
@@ -134,20 +139,17 @@ rebuild() {
 }
 
 getsize() {
-        echo "[INFO] Setting image size"
         DIRSIZE=$(du -sm $MOUNTDIR |  awk '{printf("%.f", $1)}')
 	IMGSIZE=$(du -sm ./ext4/$PARTITION.img |  awk '{printf("%.f", $1)}')
 	if (( $DIRSIZE > 100 )); then
 	NEWSIZE=$(($IMGSIZE + 100))
-	else NEWSIZE=
+	else NEWSIZE=""
 	fi
 }
 
 resizeimg() {
-	if [[ ! -z $NEWSIZE ]]; then
 	e2fsck -fy ext4/$PARTITION.img
 	resize2fs -f ext4/$PARTITION.img "$NEWSIZE"M
-	fi
 }
 
 check
