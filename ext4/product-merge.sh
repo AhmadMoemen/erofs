@@ -13,7 +13,6 @@ SIZECACHE="$tmpdir/size"
 
 rm -rf ../logs/pimg-log.txt >> /dev/null
 touch ../logs/pimg-log.txt
-mkdir ../logs
 
 echo "[INFO] Cleaning up existing build residue"
 rm -rf $MERGEDIR >/dev/null 2>&1
