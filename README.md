@@ -65,6 +65,8 @@ sudo ./oplus-merge.sh
 
 [Piraterex](https://github.com/piraterex)
 
+[PatrickFav](https://github.com/patrickfav)
+
 [Rain2Wood](https://github.com/rain2wood)
 
 [Xiaoxindada](https://github.com/xiaoxindada)
