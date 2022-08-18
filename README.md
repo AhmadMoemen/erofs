@@ -46,7 +46,7 @@ sudo ./oplus-merge.sh
 
 ### Notes ###
 - All images (especially system) must be the dir that the script is ran.
-- Make sure you have enough space. (probably like 25gb recommended)
+- Make sure you have enough space. (probably like 27gb recommended)
 
 ### To-Do ###
 - Remove dependency of system file_contexts to build all images (we currently cat system filecontexts to the working file contexts to make the image resign properly)
