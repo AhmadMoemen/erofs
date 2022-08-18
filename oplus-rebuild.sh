@@ -12,19 +12,30 @@ do
 	if [ -f "$part.img" ]; then
 	echo "[INFO] Converting $part.img to erofs"
 	./erofs.sh $part.img $part
-	mv $part-ext4.img ext4/
 	fi
 done
-[ $(du -sm $MERGEDIR | awk '{printf $1}') -gt 20 ] && cp product.img ext4/
-cd ext4
-for part in $PARTITIONS
-do
-	mv $part-ext4.img $part.img
-done
-echo "[INFO] Merging partitions into product.img"
-./product-merge.sh
-
+if [ -f product.img ]; then
+	cp product.img ext4/
+	cd ext4
+	echo "[INFO] Merging partitions into product.img"
+	./product-merge.sh
+else
+	echo "[WARNING] Product image is not present, skipping..."
+	cd ext4
+fi
+if [ -f system.img ]; then
 echo "[INFO] Merging partitions into system.img"
 ./oplus-merge.sh
-
+else
+echo "[WARNING] System image is missing, skipping..."
+fi
+OUT="system vendor system_ext odm product"
+for out in $OUT
+do
+	if [ -f $out.img ]; then
+	cp -fpr $out.img ../out
+	fi
+done
+[ -f system-org.img ] && mv system-org.img system.img
+cp ../product.img .
 echo "[INFO] Rebuild oplus images & merge done."

@@ -7,5 +7,5 @@ system_ext/
 vendor/
 ext4/
 *.img
-ext4/*.img
 logs/*.txt
+!.gitignore

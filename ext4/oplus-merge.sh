@@ -9,17 +9,20 @@ prep() {
 	touch ../logs/simg-log.txt
         echo "[INFO] Setting up"
         cd $RUNDIR
+	umount -f -l * >/dev/null 2>&1
 	echo "[INFO] Cleaning up existing build residue"
 	clean
 	if [ ! -f system.img ]; then
 	echo "[ERROR] system.img is not present, aborting..." && exit
 	fi
+	cp system.img system-org.img
         mkdir system
 	mkdir smerge
 }
 PARTITIONS="my_carrier my_company my_engineering my_heytap my_manifest my_preload my_product my_region my_stock my_version my_bigball"
 merge() {
         cd $RUNDIR
+        if [ -f $partition.img ]; then
         echo "[INFO] Merging $partition into system"
         mkdir $partition >/dev/null 2>&1
 	mkdir smerge/$partition >/dev/null 2>&1
@@ -43,6 +46,9 @@ merge() {
 	cd $RUNDIR >/dev/null 2>&1
 	umount -f -l $partition >/dev/null 2>&1
         rm -rf $partition/ >/dev/null 2>&1
+        else
+        echo "[WARNING] $partition.img cannot be merged to system, Reason: $partition not present"
+        fi
 }
 
 odmmerge() {
@@ -61,10 +67,12 @@ odmmerge() {
 	cp -fpr ../odm/etc/normalize ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/overlay ./odm >/dev/null 2>&1
-	zip -d ./odm/overlay/oplus_framework_res_overlay.display.product.$OPID.apk "res/*"
-	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/build.prop
-	sed -i 's|${ro.boot.prjname}|'"$OPID"'|g' ./odm/etc/build.prop
+	zip -d ./odm/overlay/oplus_framework_res_overlay.display.product.$OPID.apk "res/*" >/dev/null 2>&1
+	java -jar ../../tools/uber.jar -a './odm/overlay/oplus_framework_res_overlay.display.product.'$OPID'.apk' --overwrite >/dev/null 2>&1
+	sed -i 's|${ro.boot.prjname}|'$OPID'|g' ./odm/build.prop
+	sed -i 's|${ro.boot.prjname}|'$OPID'|g' ./odm/etc/build.prop
 	sed -i 's|/mnt/vendor||g' ./odm/build.prop
+	sed -i 's|/mnt/vendor||g' ./odm/etc/build.prop
         cd ..
         umount -f -l odm  >/dev/null 2>&1
 	umount -f -l system  >/dev/null 2>&1
@@ -97,6 +105,7 @@ clean() {
         umount -f -l system/ >/dev/null 2>&1
         rm -rf system/
 }
+
 
 prep
 for partition in $PARTITIONS; do

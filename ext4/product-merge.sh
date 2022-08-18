@@ -13,9 +13,7 @@ SIZECACHE="$tmpdir/size"
 
 rm -rf ../logs/pimg-log.txt >> /dev/null
 touch ../logs/pimg-log.txt
-rm -rf ../logs/pmerge-log.txt >> /dev/null
 mkdir ../logs
-touch ../logs/pmerge-log.txt
 
 echo "[INFO] Cleaning up existing build residue"
 rm -rf $MERGEDIR >/dev/null 2>&1
@@ -28,7 +26,7 @@ if [ ! -f product.img ]; then
 echo "[ERROR] product.img is not present, aborting..." && exit
 fi
 if [ $(du -sm $PARTITION.img | awk '{printf $1}') -gt 20 ]; then
-echo "[ERROR] product.img is too big to be merged again... WIP" && exit
+echo "[ERROR] product.img is too big to be merged again, aborting..." && exit
 fi
 
 usage() {
@@ -41,11 +39,16 @@ mkdir $MERGEDIR
 mkdir -p $tmpdir
 
 merge() {
-        mkdir $partition
-        mount -o ro,loop -t auto $partition.img $partition >/dev/null 2>&1
-        cp -fpr $partition/* $MERGEDIR/ >/dev/null 2>&1
-        umount -f -l $partition >/dev/null 2>&1
-        rm -rf $partition
+	if [ -f $partition.img ]; then
+        	mkdir $partition
+        	mount -o ro,loop -t auto $partition.img $partition >/dev/null 2>&1
+		echo "[INFO] Merging $partition into product.img"
+        	cp -fpr $partition/* $MERGEDIR/ >/dev/null 2>&1
+        	umount -f -l $partition >/dev/null 2>&1
+        	rm -rf $partition
+        else
+        	echo "[WARNING] $partition.img cannot be merged to $PARTITION, Reason: $partition not present"
+        fi
 }
 
 clean() {
@@ -93,8 +96,7 @@ getsize() {
 	SIZE=$(($DIRSIZE + $IMGSIZE + 100))
 }
 for partition in $PARTITIONS; do
-        echo "[INFO] Merging $partition into product.img"
-        merge >> ../logs/pmerge-log.txt
+        merge
 done
 clean
 getsize

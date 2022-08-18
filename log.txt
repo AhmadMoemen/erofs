@@ -1,0 +1,10 @@
+mke2fs 1.45.4 (23-Sep-2019)
+Creating filesystem with 85 4k blocks and 48 inodes
+
+Allocating group tables: 0/1   done                            
+Writing inode tables: 0/1   done                            
+Writing superblocks and filesystem accounting information: 0/1   done
+
+
+Created filesystem with 21/48 inodes and 23/85 blocks
+
