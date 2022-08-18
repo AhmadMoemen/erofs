@@ -67,6 +67,7 @@ odmmerge() {
 	cp -fpr ../odm/etc/normalize ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/overlay ./odm >/dev/null 2>&1
+	cp -fpr ../odm/etc/media_profiles_V1_0.xml ./odm/etc >/dev/null 2>&1
 	zip -d ./odm/overlay/oplus_framework_res_overlay.display.product.$OPID.apk "res/*" >/dev/null 2>&1
 	java -jar ../../tools/uber.jar -a './odm/overlay/oplus_framework_res_overlay.display.product.'$OPID'.apk' --overwrite >/dev/null 2>&1
 	sed -i 's|${ro.boot.prjname}|'$OPID'|g' ./odm/build.prop
