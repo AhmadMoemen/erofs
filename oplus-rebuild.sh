@@ -10,7 +10,7 @@ echo
 for part in $PARTITIONS
 do
 	if [ -f "$part.img" ]; then
-	echo "[INFO] Converting $part.img to erofs"
+	echo "[INFO] Converting $part.img to ext4"
 	./erofs.sh $part.img $part
 	fi
 done
