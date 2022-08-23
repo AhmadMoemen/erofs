@@ -68,8 +68,12 @@ odmmerge() {
 	cp -fpr ../odm/etc/*.prop ./odm/etc >/dev/null 2>&1
 	cp -fpr ../odm/overlay ./odm >/dev/null 2>&1
 	cp -fpr ../odm/etc/media_profiles_V1_0.xml ./odm/etc >/dev/null 2>&1
-	zip -d ./odm/overlay/oplus_framework_res_overlay.display.product.$OPID.apk "res/*" >/dev/null 2>&1
-	java -jar ../../tools/uber.jar -a './odm/overlay/oplus_framework_res_overlay.display.product.'$OPID'.apk' --overwrite >/dev/null 2>&1
+	OPRC=./odm/overlay/oplus_framework_res_overlay.display.product.$OPID.apk
+	[ ! -f $OPRC ] && OPRC=./my_product/overlay/oplus_framework_res_overlay.display.product.$OPID.apk
+	if [ -f $OPRC ]; then
+	zip -d $OPRC "res/*" >/dev/null 2>&1
+	java -jar ../../tools/uber.jar -a $OPRC --overwrite >/dev/null 2>&1
+	fi
 	sed -i 's|${ro.boot.prjname}|'$OPID'|g' ./odm/build.prop
 	sed -i 's|${ro.boot.prjname}|'$OPID'|g' ./odm/etc/build.prop
 	sed -i 's|/mnt/vendor||g' ./odm/build.prop
