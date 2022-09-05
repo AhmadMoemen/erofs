@@ -5,6 +5,6 @@ my_*/
 system/
 system_ext/
 vendor/
-ext4/
+ext4/*.img
 *.img
 !.gitignore

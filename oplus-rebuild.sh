@@ -29,6 +29,8 @@ echo "[INFO] Merging partitions into system.img"
 else
 echo "[WARNING] System image is missing, skipping..."
 fi
+echo "[INFO] Removing overlay corners..."
+./oplus-overlay.sh
 OUT="system vendor system_ext product"
 for out in $OUT
 do
