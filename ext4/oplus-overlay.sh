@@ -14,7 +14,7 @@ patchoverlay() {
 	[ ! -f $OPRC ] && OPRC=./product/overlay/oplus_framework_res_overlay.display.product.$OPID.apk
 	if [ -f $OPRC ]; then
 	zip -d $OPRC "res/*" >/dev/null 2>&1
-	java -jar ../../tools/uber.jar -a $OPRC --overwrite >/dev/null 2>&1
+	java -jar ../tools/uber.jar -a $OPRC --overwrite >/dev/null 2>&1
 	fi
 }
 
