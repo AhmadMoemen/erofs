@@ -15,7 +15,8 @@ RUNDIR=$(dirname $1)
 MOUNTDIR="$LOCALDIR/$PARTITION"
 toolsdir="$LOCALDIR/tools"
 tmpdir="$LOCALDIR/tmp"
-fileconts="$tmpdir/plat_file_contexts"
+fileconts="$tmpdir/$2_file_contexts"
+
 
 usage() {
     echo "sudo ./$0 <image path> <partition name>"
@@ -114,8 +115,16 @@ contextfix() {
 rebuild() {
     mkdir $tmpdir
     echo "[INFO] Rebuilding $PARTITION as ext4 image..."
-    cp -fpr $(sudo find $MOUNTDIR | grep file_contexts) $tmpdir/ >/dev/null 2>&1 
+    # selibux
+    cp -fpr $(sudo find $MOUNTDIR | grep file_contexts) $tmpdir/ >/dev/null 2>&1
+    if [[ $PARTITION == "system" ]]; then
+    fileconts="$tmpdir/plat_file_contexts"
     contextfix
+    fi
+    [[ $PARTITION == "vendor" ]] && echo "/(vendor|system/vendor)(/.*)?                  u:object_r:vendor_file:s0" >> "$fileconts"
+    [[ $PARTITION == "odm" ]] && echo "/(odm|vendor/odm)(/.*)?                       u:object_r:vendor_file:s0" >> "$fileconts"
+    [[ $PARTITION == "system_ext" ]] && echo "/(system_ext|system/system_ext)(/.*)?               u:object_r:system_file:s0" >> "$fileconts"
+    # end selinux
     IMGSIZE=$(du -sb $IMAGE | awk '{printf("%.f", $1)}')
     SIZE=$(du -sb $MOUNTDIR | awk '{printf("%.f", $1)}')
     if (( $SIZE < 1474560 )); then
