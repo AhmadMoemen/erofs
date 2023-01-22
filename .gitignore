@@ -7,4 +7,5 @@ system_ext/
 vendor/
 ext4/*.img
 *.img
+*.zip
 !.gitignore
